@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WELCOME TO THE VOTING PORTAL</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            padding: 20px;
+            margin: 0; /* Remove default margin to ensure full-page coverage */
+        }
+        .background-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1; /* Ensure it's behind other content */
+            filter: blur(10px); /* Apply blur effect to the background */
+            background: url('election comission of india.jpg') no-repeat center center fixed;
+            background-size: cover; /* Cover entire background with image */
+        }
+        .marquee {
+            background-color: yellow;
+            animation: marquee-alternate 10s infinite alternate;
+            font-size: 24px;
+            color: red;
+            padding: 10px;
+            text-align: center;
+            position: relative;
+            z-index: 1; /* Ensure it's above the background */
+        }
+        @keyframes marquee-alternate {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(100%); }
+        }
+        form {
+            max-width: 500px;
+            margin: 20px auto;
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.2);
+            position: relative;
+            z-index: 1; /* Ensure form is above the background */
+        }
+        input[type=text], input[type=password], input[type=date] {
+            width: calc(100% - 16px);
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            transition: border-color 0.3s ease-in-out; /* smooth transition for border color */
+        }
+        input[type=radio] {
+            margin-right: 10px;
+        }
+        input[type=submit] {
+            width: 100%;
+            padding: 12px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        input[type=submit]:hover {
+            background-color: #45a049;
+        }
+        .error-message {
+            color: red;
+            margin-top: 5px;
+        }
+        /* CSS for focusing on hover */
+        input[type=text]:hover, input[type=password]:hover, input[type=date]:hover {
+            border-color: #999; /* change border color on hover */
+        }
+        /* Optional: Add specific styles when input fields are focused */
+        input[type=text]:focus, input[type=password]:focus, input[type=date]:focus {
+            border-color: #333; /* change border color when focused */
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.3); /* add a subtle shadow when focused */
+        }
+    </style>
+    <link rel="stylesheet" href="https://pyscript.net/latest/pyscript.css" />
+    <script defer src="https://pyscript.net/latest/pyscript.js"></script>
+</head>
+<body>
+    <div class="background-container"></div>
+
+    <div class="marquee"><b>|| PLEASE FILL THE FOLLOWING DATA BEFORE VOTING || DATA SHOULD BE FILLED BY THE OPERATOR ||</b></div><br> 
+
+    <form name="votingForm" id='form' onsubmit="return validateForm()">
+        <label for="serial">Serial No:</label>
+        <input type="text" id="serial" name="serial"><br>
+
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" maxlength="50" required><br>
+
+        <label for="dob">Date of Birth:</label>
+        <input type="date" id="dob" name="dob"><br>
+
+        <label for="voterid">Voter Id No:</label>
+        <input type="text" id="voterid" name="voterid" maxlength="12"><br>
+
+        <label>Gender:</label>
+        <input type="radio" name="gender" id="male" value="male"><label for="male"> Male</label>
+        <input type="radio" name="gender" id="female" value="female"><label for="female"> Female</label><br><br>
+
+        <input type="submit" value="Submit">
+        <div class="error-message" id="error-message"></div>
+    </form>
+
+    <py-script>
+        def validate_form():
+            from js import document
+            form = document.forms["votingForm"]
+            name = form["name"].value
+            gender = form.querySelector('input[name="gender"]:checked')
+            
+            # Simple validation checks
+            if not name.strip():
+                display_error_message("Name cannot be blank")
+                return False
+            
+            if not gender:
+                display_error_message("Please select a gender")
+                return False
+            
+            # If all validations pass
+            return True
+        
+        def display_error_message(message):
+            from js import document
+            error_message = document.getElementById("error-message")
+            error_message.textContent = message
+        
+        from js import window
+        window.validateForm = validate_form
+    </py-script>
+    <script>
+        let url = "https://script.google.com/macros/s/AKfycbxrm9RzFFbvPa5NUH6HmK_be9eCJR2zNBRm7Y85cBaFggHdJ5eQOlpBUhg2huS7mWAV/exec"; // Replace with your web app URL
+        
+        let form = document.querySelector('#form');
+        form.addEventListener("submit", (e) => {
+            let d = new FormData(form);
+            fetch(url, {
+                method: "POST",
+                body: d
+            }).then((res) => res.text())
+            .then((finalres) => {
+                console.log(finalres);
+                window.location.reload(); // Refresh the page after submission
+            });
+            e.preventDefault();
+        });
+    </script>
+</body>
+</html>
