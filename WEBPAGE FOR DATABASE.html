@@ -142,21 +142,33 @@
         window.validateForm = validate_form
     </py-script>
     <script>
-        let url = "https://script.google.com/macros/s/AKfycbxrm9RzFFbvPa5NUH6HmK_be9eCJR2zNBRm7Y85cBaFggHdJ5eQOlpBUhg2huS7mWAV/exec"; // Replace with your web app URL
+        let url = "/saveapi"; // Replace with your web app URL
         
-        let form = document.querySelector('#form');
-        form.addEventListener("submit", (e) => {
-            let d = new FormData(form);
-            fetch(url, {
-                method: "POST",
-                body: d
-            }).then((res) => res.text())
-            .then((finalres) => {
-                console.log(finalres);
-                window.location.reload(); // Refresh the page after submission
-            });
-            e.preventDefault();
-        });
+     form.addEventListener("submit", (e) => {
+    e.preventDefault();
+
+    const formData = {
+        serial: document.getElementById("serial").value,
+        name: document.getElementById("name").value,
+        dob: document.getElementById("dob").value,
+        voterid: document.getElementById("voterid").value,
+        gender: document.querySelector('input[name="gender"]:checked')?.value || ""
+    };
+
+    fetch(url, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(formData)
+    })
+    .then((res) => res.text())
+    .then((finalres) => {
+        console.log(finalres);
+        window.location.reload();
+    });
+});
+
     </script>
 </body>
 </html>
